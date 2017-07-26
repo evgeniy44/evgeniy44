@@ -1,16 +1,22 @@
 package chess;
 
 
+import chess.move.*;
 import chess.pieces.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Class that represents the current state of the game.  Basically, what pieces are in which positions on the
  * board.
  */
 public class GameState {
+
+    public static final int BLACK_START_ROW = 7;
+    public static final int WHITE_START_ROW = 2;
 
     /**
      * The current player
@@ -32,6 +38,8 @@ public class GameState {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
+    private Map<Class, MoveFinder> moveFinders = new HashMap<>();
 
     /**
      * Call to initialize the game state into the starting positions
@@ -72,6 +80,13 @@ public class GameState {
         placePiece(new Pawn(Player.Black), new Position("f7"));
         placePiece(new Pawn(Player.Black), new Position("g7"));
         placePiece(new Pawn(Player.Black), new Position("h7"));
+
+        moveFinders.put(Pawn.class, new PawnMoveFinder(this));
+        moveFinders.put(King.class, new KingMoveFinder(this));
+        moveFinders.put(Rook.class, new RookMoveFinder(this));
+        moveFinders.put(Knight.class, new KnightMoveFinder(this));
+        moveFinders.put(Bishop.class, new BishopMoveFinder(this));
+        moveFinders.put(Queen.class, new QueenMoveFinder(this));
     }
 
     /**
@@ -100,5 +115,35 @@ public class GameState {
      */
     private void placePiece(Piece piece, Position position) {
         positionToPieceMap.put(position, piece);
+    }
+
+    public List<Move> getAvailableMoves() {
+        return getCurrentPlayerPositions().stream().map(this::toListOfMoves).flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    private List<Move> toListOfMoves(Position position) {
+        Piece piece = getPieceAt(position);
+        return moveFinders.get(piece.getClass())
+                .findPositionsToMove(currentPlayer, position)
+                .stream()
+                .map(destinationPosition -> new Move(position, destinationPosition)).collect(Collectors.toList());
+    }
+
+    public List<Position> getCurrentPlayerPositions() {
+        return positionToPieceMap.keySet().stream().filter(this::isCurrentPlayerPieceOnPosition)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isCurrentPlayerPieceOnPosition(Position position) {
+        return positionToPieceMap.get(position).getOwner().equals(currentPlayer);
+    }
+
+    public boolean isNotBusy(Position position) {
+        return getPieceAt(position) == null;
+    }
+
+    public boolean containsOppositePiece(Position position) {
+        return getPieceAt(position) != null && !currentPlayer.equals(getPieceAt(position).getOwner());
     }
 }
