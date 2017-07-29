@@ -42,6 +42,19 @@ public abstract class BaseMoveFinderTest {
         }
     }
 
+    protected void notProtected(GameState gameState, String... positions) {
+        for (String position : positions) {
+            when(gameState.isNotProtected(new Position(position))).thenReturn(true);
+        }
+    }
+
+    protected void isProtected(GameState gameState, String... positions) {
+        for (String position : positions) {
+            when(gameState.isNotProtected(new Position(position))).thenReturn(false);
+        }
+    }
+
+
     protected void notOppositePositions(GameState gameState, String... positions) {
         for (String position : positions) {
             when(gameState.containsOppositePiece(new Position(position))).thenReturn(false);

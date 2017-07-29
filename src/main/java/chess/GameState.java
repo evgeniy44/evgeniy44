@@ -147,4 +147,14 @@ public class GameState {
     public boolean containsMyPiece(Position position) {
         return getPieceAt(position) != null && currentPlayer.equals(getPieceAt(position).getOwner());
     }
+
+    public boolean isNotProtected(Position position) {
+        Piece piece = getPieceAt(position);
+        return moveFinderFacade.findPositionsUnderProtection(piece.getClass(), oppositePlayer(), position)
+                .contains(position);
+    }
+
+    private Player oppositePlayer() {
+        return Player.White.equals(currentPlayer) ? Player.Black : Player.White;
+    }
 }
