@@ -55,5 +55,4 @@ public class MoveFinderFacadeTest {
         assertThat(positionsToMove).containsOnly(new Position("e4"));
         verify(moveFinder).findPositionsToProtect(Player.White, position);
     }
-
 }
