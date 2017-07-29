@@ -30,7 +30,7 @@ public class KnightMoveFinder implements MoveFinder {
     }
 
     @Override
-    public List<Position> findPositionsUnderProtection(Player player, Position position) {
+    public List<Position> findPositionsToProtect(Player player, Position position) {
         return findPositionsToMove(player, position);
     }
 

@@ -28,7 +28,7 @@ public class StraightLinePieceMoveFinder implements MoveFinder {
     }
 
     @Override
-    public List<Position> findPositionsUnderProtection(Player player, Position position) {
+    public List<Position> findPositionsToProtect(Player player, Position position) {
         ArrayList<Position> positions = new ArrayList<>();
         for (Function<Position, Position> directionFunction : directionFunctions) {
             positions.addAll(fromDirection(position, directionFunction, true));

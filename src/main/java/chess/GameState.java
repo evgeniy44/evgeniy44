@@ -150,7 +150,7 @@ public class GameState {
 
     public boolean isNotProtected(Position position) {
         Piece piece = getPieceAt(position);
-        return moveFinderFacade.findPositionsUnderProtection(piece.getClass(), oppositePlayer(), position)
+        return moveFinderFacade.findPositionsToProtect(piece.getClass(), oppositePlayer(), position)
                 .contains(position);
     }
 

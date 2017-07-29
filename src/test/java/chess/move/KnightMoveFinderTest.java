@@ -30,7 +30,7 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
     @Test
     public void shouldReturnAll8UnderProtections() {
         notBusyPositions(gameState, "d2", "f2", "g3", "g5", "f6", "d6", "c5", "c3");
-        List<Position> moves = knightMoveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
+        List<Position> moves = knightMoveFinder.findPositionsToProtect(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves,"d2", "f2", "g3", "g5", "f6", "d6", "c5", "c3");
     }
 
@@ -51,7 +51,7 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
         busyPositions(gameState, "c5");
         oppositePositions(gameState, "c5");
 
-        List<Position> moves = knightMoveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
+        List<Position> moves = knightMoveFinder.findPositionsToProtect(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves,"d2", "f2", "g3", "g5", "f6", "d6", "c3", "c5");
     }
 
@@ -73,7 +73,7 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
         oppositePositions(gameState, "g5");
         notOppositePositions(gameState, "c5");
 
-        List<Position> moves = knightMoveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
+        List<Position> moves = knightMoveFinder.findPositionsToProtect(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves, "d2", "f2", "g3", "g5", "f6", "d6", "c3");
     }
 
@@ -89,7 +89,7 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
     public void shouldNotReturnPositionsUnderProtectionWhenTheyAreOutOfTheBoard() {
         notBusyPositions(gameState, "b3", "c2");
 
-        List<Position> moves = knightMoveFinder.findPositionsUnderProtection(Player.White, new Position("a1"));
+        List<Position> moves = knightMoveFinder.findPositionsToProtect(Player.White, new Position("a1"));
         assertContainsOnlyPositions(moves, "b3", "c2");
     }
 }

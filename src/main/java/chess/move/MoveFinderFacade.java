@@ -7,7 +7,6 @@ import chess.PositionUtils;
 import chess.pieces.*;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,15 @@ import java.util.Map;
 public class MoveFinderFacade {
 
     private final GameState gameState;
+    private Map<Class<?>, MoveFinder> moveFinders = new HashMap<>();
 
-    private Map<Class, MoveFinder> moveFinders = new HashMap<>();
+    /**
+     * Only for tests.
+     */
+    MoveFinderFacade(GameState gameState, Map<Class<?>, MoveFinder> moveFinders) {
+        this.gameState = gameState;
+        this.moveFinders = moveFinders;
+    }
 
     public MoveFinderFacade(GameState gameState) {
         this.gameState = gameState;
@@ -41,7 +47,7 @@ public class MoveFinderFacade {
         return moveFinders.get(pieceClass).findPositionsToMove(player, position);
     }
 
-    public List<Position> findPositionsUnderProtection(Class pieceClass, Player player, Position position) {
-        return new ArrayList<>();
+    public List<Position> findPositionsToProtect(Class pieceClass, Player player, Position position) {
+        return moveFinders.get(pieceClass).findPositionsToProtect(player, position);
     }
 }

@@ -34,7 +34,7 @@ public class KingMoveFinder implements MoveFinder {
     }
 
     @Override
-    public List<Position> findPositionsUnderProtection(Player player, Position position) {
+    public List<Position> findPositionsToProtect(Player player, Position position) {
         return Lists.newArrayList(up(position),  upAndRight(position), right(position), downAndRight(position),
                 down(position), downAndLeft(position), left(position), upAndLeft(position));
     }

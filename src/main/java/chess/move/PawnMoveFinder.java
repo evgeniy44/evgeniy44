@@ -29,7 +29,7 @@ public class PawnMoveFinder implements MoveFinder {
     }
 
     @Override
-    public List<Position> findPositionsUnderProtection(Player player, Position position) {
+    public List<Position> findPositionsToProtect(Player player, Position position) {
         return getNextHeatPositions(position, player);
     }
 

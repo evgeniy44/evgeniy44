@@ -31,7 +31,7 @@ public class KingMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllPositionsToMovProtect() {
-        List<Position> positions = moveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
+        List<Position> positions = moveFinder.findPositionsToProtect(Player.White, new Position("e4"));
         assertContainsOnlyPositions(positions, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
     }
 

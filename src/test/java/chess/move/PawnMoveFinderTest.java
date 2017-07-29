@@ -104,7 +104,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllProtectedPositions() {
-        List<Position> movePositions = pawnMoveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
+        List<Position> movePositions = pawnMoveFinder.findPositionsToProtect(Player.White, new Position("e4"));
         assertContainsOnlyPositions(movePositions, "d5", "f5");
     }
 }

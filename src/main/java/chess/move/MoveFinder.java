@@ -9,5 +9,5 @@ public interface MoveFinder {
 
     List<Position> findPositionsToMove(Player player, Position position);
 
-    List<Position> findPositionsUnderProtection(Player player, Position position);
+    List<Position> findPositionsToProtect(Player player, Position position);
 }
