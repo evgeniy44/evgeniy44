@@ -14,73 +14,71 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StraightLinePieceMoveFinderTest {
+public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Mock
     private GameState gameState;
 
+    @InjectMocks
+    private StraightLinePieceMoveFinder moveFinder = new StraightLinePieceMoveFinder(gameState, Lists.newArrayList(
+            PositionUtils::upAndRight, PositionUtils::upAndLeft,
+            PositionUtils::downAndRight, PositionUtils::downAndLeft));
+
     @Test
-    public void shoudReturnAllPositionsByEndOfBoard() {
-        StraightLinePieceMoveFinder bishopMoveFinder = new StraightLinePieceMoveFinder(gameState, Lists.newArrayList(
-                PositionUtils::upAndRight, PositionUtils::upAndLeft,
-                PositionUtils::downAndRight, PositionUtils::downAndLeft));
+    public void shouldReturnAllPositionsByEndOfBoard() {
+        notBusyPositions(gameState, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
 
-        when(gameState.isNotBusy(new Position("a2"))).thenReturn(true);
-        when(gameState.isNotBusy(new Position("c2"))).thenReturn(true);
-        when(gameState.isNotBusy(new Position("d3"))).thenReturn(true);
-        when(gameState.isNotBusy(new Position("e4"))).thenReturn(true);
-        when(gameState.isNotBusy(new Position("f5"))).thenReturn(true);
-        when(gameState.isNotBusy(new Position("g6"))).thenReturn(true);
-        when(gameState.isNotBusy(new Position("h7"))).thenReturn(true);
+        List<Position> moves = moveFinder.findPositionsToMove(Player.White, new Position("b1"));
+        assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
+    }
 
-        List<Position> moves = bishopMoveFinder.findPositionsToMove(Player.White, new Position("b1"));
+    @Test
+    public void shoudReturnAllPositionsByEndOfBoardUnderProtection() {
+        notBusyPositions(gameState, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
 
-        assertThat(moves).containsOnly(new Position("a2"), new Position("c2"),
-                new Position("d3"),  new Position("e4"), new Position("f5"),
-                new Position("g6"), new Position("h7"));
+        List<Position> moves = moveFinder.findPositionsUnderProtection(Player.White, new Position("b1"));
+        assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
     }
 
     @Test
     public void shoudReturnAllPositionsWithoutMyPiece() {
-        StraightLinePieceMoveFinder bishopMoveFinder = new StraightLinePieceMoveFinder(gameState, Lists.newArrayList(
-                PositionUtils::upAndRight, PositionUtils::upAndLeft,
-                PositionUtils::downAndRight, PositionUtils::downAndLeft));
+        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
+        busyPositions(gameState, "f5");
+        myPositions(gameState, "f5");
 
-        when(gameState.containsMyPiece(new Position("a2"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("c2"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("d3"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("e4"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("f5"))).thenReturn(true);
+        List<Position> moves = moveFinder.findPositionsToMove(Player.White, new Position("b1"));
+        assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4");
+    }
 
-        List<Position> moves = bishopMoveFinder.findPositionsToMove(Player.White, new Position("b1"));
+    @Test
+    public void shoudReturnAllPositionsWithMyPieceUnderProtection() {
+        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
+        busyPositions(gameState, "f5");
+        myPositions(gameState, "f5");
 
-        assertThat(moves).containsOnly(new Position("a2"), new Position("c2"),
-                new Position("d3"),  new Position("e4"));
+        List<Position> moves = moveFinder.findPositionsUnderProtection(Player.White, new Position("b1"));
+        assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5");
     }
 
     @Test
     public void shoudReturnAllPositionsWithOppositePiece() {
-        StraightLinePieceMoveFinder bishopMoveFinder = new StraightLinePieceMoveFinder(gameState, Lists.newArrayList(
-                PositionUtils::upAndRight, PositionUtils::upAndLeft,
-                PositionUtils::downAndRight, PositionUtils::downAndLeft));
+        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
+        busyPositions(gameState, "f5");
+        notMyPositions(gameState, "f5");
 
-        when(gameState.containsMyPiece(new Position("a2"))).thenReturn(false);
-        when(gameState.containsOppositePiece(new Position("a2"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("c2"))).thenReturn(false);
-        when(gameState.containsOppositePiece(new Position("c2"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("d3"))).thenReturn(false);
-        when(gameState.containsOppositePiece(new Position("d3"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("e4"))).thenReturn(false);
-        when(gameState.containsOppositePiece(new Position("e4"))).thenReturn(false);
-        when(gameState.containsMyPiece(new Position("f5"))).thenReturn(false);
-        when(gameState.containsOppositePiece(new Position("f5"))).thenReturn(true);
+        List<Position> moves = moveFinder.findPositionsToMove(Player.White, new Position("b1"));
+        assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5");
+    }
 
-        List<Position> moves = bishopMoveFinder.findPositionsToMove(Player.White, new Position("b1"));
+    @Test
+    public void shoudReturnAllPositionsWithOppositePieceUnderProtection() {
+        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
+        busyPositions(gameState, "f5");
+        notMyPositions(gameState, "f5");
 
-        assertThat(moves).containsOnly(new Position("a2"), new Position("c2"),
-                new Position("d3"),  new Position("e4"), new Position("f5"));
+        List<Position> moves = moveFinder.findPositionsUnderProtection(Player.White, new Position("b1"));
+        assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5");
     }
 }

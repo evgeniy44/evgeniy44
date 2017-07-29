@@ -39,7 +39,7 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
     public void shouldReturn7AvailablePositionWhenOneOfThemIsBusy() {
         notBusyPositions(gameState, "d2", "f2", "g3", "g5", "f6", "d6", "c3");
         busyPositions(gameState, "c5");
-        containsOppositePiece(gameState, "c5");
+        oppositePositions(gameState, "c5");
 
         List<Position> moves = knightMoveFinder.findPositionsToMove(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves,"d2", "f2", "g3", "g5", "f6", "d6", "c3", "c5");
@@ -49,7 +49,7 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
     public void shouldReturn7AvailablePositionWhenOneOfThemIsBusyUnderProtection() {
         notBusyPositions(gameState, "d2", "f2", "g3", "g5", "f6", "d6", "c3");
         busyPositions(gameState, "c5");
-        containsOppositePiece(gameState, "c5");
+        oppositePositions(gameState, "c5");
 
         List<Position> moves = knightMoveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves,"d2", "f2", "g3", "g5", "f6", "d6", "c3", "c5");
@@ -59,8 +59,8 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
     public void shouldReturn7AvailablePositionyWhenOneOfThemIsBusyButNotHeatable() {
         notBusyPositions(gameState, "d2", "f2", "g3", "g5", "f6", "d6", "c3");
         busyPositions(gameState, "c5");
-        containsOppositePiece(gameState, "g5");
-        notContainsOppositePiece(gameState, "c5");
+        oppositePositions(gameState, "g5");
+        notOppositePositions(gameState, "c5");
 
         List<Position> moves = knightMoveFinder.findPositionsToMove(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves, "d2", "f2", "g3", "g5", "f6", "d6", "c3");
@@ -70,8 +70,8 @@ public class KnightMoveFinderTest extends BaseMoveFinderTest {
     public void shouldReturn7AvailablePositionyWhenOneOfThemIsBusyButNotHeatableUnderProtection() {
         notBusyPositions(gameState, "d2", "f2", "g3", "g5", "f6", "d6", "c3");
         busyPositions(gameState, "c5");
-        containsOppositePiece(gameState, "g5");
-        notContainsOppositePiece(gameState, "c5");
+        oppositePositions(gameState, "g5");
+        notOppositePositions(gameState, "c5");
 
         List<Position> moves = knightMoveFinder.findPositionsUnderProtection(Player.White, new Position("e4"));
         assertContainsOnlyPositions(moves, "d2", "f2", "g3", "g5", "f6", "d6", "c3");

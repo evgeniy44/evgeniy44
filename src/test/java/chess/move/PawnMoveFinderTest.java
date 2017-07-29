@@ -26,7 +26,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnStepAndJumpMoves() {
-        notContainsOppositePiece(gameState, "d3", "f3");
+        notOppositePositions(gameState, "d3", "f3");
         notBusyPositions(gameState, "e3", "e4");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
@@ -35,7 +35,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnOnlyStep() {
-        notContainsOppositePiece(gameState, "d3", "f3");
+        notOppositePositions(gameState, "d3", "f3");
         notBusyPositions(gameState, "e3");
         busyPositions(gameState, "e4");
 
@@ -45,7 +45,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnNoPositionsToMove() {
-        notContainsOppositePiece(gameState, "d3", "f3");
+        notOppositePositions(gameState, "d3", "f3");
         notBusyPositions(gameState, "e4");
         busyPositions(gameState, "e3");
 
@@ -55,8 +55,8 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnPositionToHeatLeft() {
-        notContainsOppositePiece(gameState, "f3");
-        containsOppositePiece(gameState, "d3");
+        notOppositePositions(gameState, "f3");
+        oppositePositions(gameState, "d3");
         notBusyPositions(gameState, "e4");
         busyPositions(gameState, "e3");
 
@@ -66,8 +66,8 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnPositionToHeatRight() {
-        notContainsOppositePiece(gameState, "d3");
-        containsOppositePiece(gameState, "f3");
+        notOppositePositions(gameState, "d3");
+        oppositePositions(gameState, "f3");
         notBusyPositions(gameState, "e4");
         busyPositions(gameState, "e3");
 
@@ -77,7 +77,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllPossiblePositions() {
-        containsOppositePiece(gameState, "f3", "d3");
+        oppositePositions(gameState, "f3", "d3");
         notBusyPositions(gameState, "e4", "e3");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
@@ -86,7 +86,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllPosiblePositionsForBlackPlayer() {
-        containsOppositePiece(gameState, "d6", "f6");
+        oppositePositions(gameState, "d6", "f6");
         notBusyPositions(gameState, "e5", "e6");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.Black, new Position("e7"));
@@ -95,7 +95,7 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllHeatPositionsForBlackPlayer() {
-        notContainsOppositePiece(gameState, "d6", "f6");
+        notOppositePositions(gameState, "d6", "f6");
         notBusyPositions(gameState, "e5", "e6");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.Black, new Position("e7"));

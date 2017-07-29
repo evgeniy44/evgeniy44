@@ -24,13 +24,25 @@ public abstract class BaseMoveFinderTest {
         }
     }
 
-    protected void containsOppositePiece(GameState gameState, String... positions) {
+    protected void oppositePositions(GameState gameState, String... positions) {
         for (String position : positions) {
             when(gameState.containsOppositePiece(new Position(position))).thenReturn(true);
         }
     }
 
-    protected void notContainsOppositePiece(GameState gameState, String... positions) {
+    protected void myPositions(GameState gameState, String... positions) {
+        for (String position : positions) {
+            when(gameState.containsMyPiece(new Position(position))).thenReturn(true);
+        }
+    }
+
+    protected void notMyPositions(GameState gameState, String... positions) {
+        for (String position : positions) {
+            when(gameState.containsMyPiece(new Position(position))).thenReturn(false);
+        }
+    }
+
+    protected void notOppositePositions(GameState gameState, String... positions) {
         for (String position : positions) {
             when(gameState.containsOppositePiece(new Position(position))).thenReturn(false);
         }
