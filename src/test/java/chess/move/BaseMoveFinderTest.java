@@ -30,6 +30,12 @@ public abstract class BaseMoveFinderTest {
         }
     }
 
+    protected void notContainsOppositePiece(GameState gameState, String... positions) {
+        for (String position : positions) {
+            when(gameState.containsOppositePiece(new Position(position))).thenReturn(false);
+        }
+    }
+
     protected void assertContainsOnlyPositions(List<Position> actualPositions,
                                                String... expectedPositions) {
         List<Position> positions =
