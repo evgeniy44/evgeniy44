@@ -40,55 +40,8 @@ public class Position {
         return column;
     }
 
-    public Optional<Position> up() {
-        Position position = new Position(getColumn(), getRow() + 1);
-        if (position.outOfBoard()) {
-            return Optional.empty();
-        }
-        return Optional.of(position);
-    }
 
-    public Optional<Position> down() {
-        Position position = new Position(getColumn(), getRow() - 1);
-        if (position.outOfBoard()) {
-            return Optional.empty();
-        }
-        return Optional.of(position);
-    }
-
-    public Position left() {
-        Character leftColumn = Column.left(getColumn());
-        if (leftColumn != null) {
-            return new Position(leftColumn, getRow());
-        }
-        return null;
-    }
-
-    public Position right() {
-        Character rightColumn = Column.right(getColumn());
-        if (rightColumn != null) {
-            return new Position(rightColumn, getRow());
-        }
-        return null;
-    }
-
-    public Optional<Position> upAndLeft() {
-        return up().map(Position::left);
-    }
-
-    public Optional<Position> upAndRight() {
-        return up().map(Position::right);
-    }
-
-    public Optional<Position> downAndRight() {
-        return down().map(Position::right);
-    }
-
-    public Optional<Position> downAndLeft() {
-        return down().map(Position::left);
-    }
-
-    private boolean outOfBoard() {
+    public boolean outOfBoard() {
         return getRow() < 1 || getRow() > 8;
     }
 

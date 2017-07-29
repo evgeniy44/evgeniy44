@@ -19,4 +19,9 @@ public class KingMoveFinder implements MoveFinder {
     public List<Position> findPositionsToMove(Player player, Position position) {
         return new ArrayList<>();
     }
+
+    @Override
+    public List<Position> findPositionsUnderProtection(Player player, Position piecePosition) {
+        return new ArrayList<>();
+    }
 }

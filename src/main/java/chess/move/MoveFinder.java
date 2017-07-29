@@ -8,4 +8,6 @@ import java.util.List;
 public interface MoveFinder {
 
     List<Position> findPositionsToMove(Player player, Position position);
+
+    List<Position> findPositionsUnderProtection(Player player, Position piecePosition);
 }

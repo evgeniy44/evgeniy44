@@ -1,7 +1,7 @@
 package chess;
 
 
-import chess.move.*;
+import chess.move.MoveFinderFacade;
 import chess.pieces.*;
 
 import java.util.HashMap;
@@ -28,6 +28,9 @@ public class GameState {
      */
     private Map<Position, Piece> positionToPieceMap;
 
+
+    private MoveFinderFacade moveFinderFacade = new MoveFinderFacade(this);
+
     /**
      * Create the game state.
      */
@@ -39,7 +42,9 @@ public class GameState {
         return currentPlayer;
     }
 
-    private Map<Class, MoveFinder> moveFinders = new HashMap<>();
+
+
+
 
     /**
      * Call to initialize the game state into the starting positions
@@ -80,13 +85,6 @@ public class GameState {
         placePiece(new Pawn(Player.Black), new Position("f7"));
         placePiece(new Pawn(Player.Black), new Position("g7"));
         placePiece(new Pawn(Player.Black), new Position("h7"));
-
-        moveFinders.put(Pawn.class, new PawnMoveFinder(this));
-        moveFinders.put(King.class, new KingMoveFinder(this));
-        moveFinders.put(Rook.class, new RookMoveFinder(this));
-        moveFinders.put(Knight.class, new KnightMoveFinder(this));
-        moveFinders.put(Bishop.class, new BishopMoveFinder(this));
-        moveFinders.put(Queen.class, new QueenMoveFinder(this));
     }
 
     /**
@@ -124,8 +122,7 @@ public class GameState {
 
     private List<Move> toListOfMoves(Position position) {
         Piece piece = getPieceAt(position);
-        return moveFinders.get(piece.getClass())
-                .findPositionsToMove(currentPlayer, position)
+        return moveFinderFacade.findPositionsToMove(piece.getClass(), currentPlayer, position)
                 .stream()
                 .map(destinationPosition -> new Move(position, destinationPosition)).collect(Collectors.toList());
     }
@@ -145,5 +142,9 @@ public class GameState {
 
     public boolean containsOppositePiece(Position position) {
         return getPieceAt(position) != null && !currentPlayer.equals(getPieceAt(position).getOwner());
+    }
+
+    public boolean containsMyPiece(Position position) {
+        return getPieceAt(position) != null && currentPlayer.equals(getPieceAt(position).getOwner());
     }
 }

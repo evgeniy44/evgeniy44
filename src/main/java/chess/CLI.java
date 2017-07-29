@@ -69,6 +69,8 @@ public class CLI {
 
                 } else if (input.startsWith("move")) {
                     writeOutput("====> Move Is Not Implemented (yet) <====");
+                } else if (input.equals("hint")) {
+                    writeOutput("Лошадью ходи, век воли не видать!");
                 } else {
                     writeOutput("I didn't understand that.  Type 'help' for a list of commands.");
                 }

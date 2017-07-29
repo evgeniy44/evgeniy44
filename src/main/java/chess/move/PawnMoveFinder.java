@@ -3,6 +3,7 @@ package chess.move;
 import chess.GameState;
 import chess.Player;
 import chess.Position;
+import chess.PositionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +28,11 @@ public class PawnMoveFinder implements MoveFinder {
         return positionsToMove;
     }
 
+    @Override
+    public List<Position> findPositionsUnderProtection(Player player, Position position) {
+        return getNextHeatPositions(position, player);
+    }
+
     private List<Position> getPositionsToHeat(Player player, Position position) {
         return getNextHeatPositions(position, player).stream().filter(gameState::containsOppositePiece)
                 .collect(Collectors.toList());
@@ -38,25 +44,25 @@ public class PawnMoveFinder implements MoveFinder {
             positions.add(step(position, player));
             positions.add(step(step(position, player), player));
         } else if (canStep(position, player)) {
-            positions.add(position.up());
+            positions.add(PositionUtils.up(position));
         }
         return positions;
     }
 
     private boolean canStep(Position position, Player player) {
-        return isStartPosition(position.getRow(), player) && gameState.isNotBusy(position.up());
+        return isStartPosition(position.getRow(), player) && gameState.isNotBusy(PositionUtils.up(position));
     }
 
     private Position step(Position position, Player player) {
         if (Player.White.equals(player)) {
-            return position.up();
+            return PositionUtils.up(position);
         }
-        return position.down();
+        return PositionUtils.down(position);
     }
 
     private boolean canJump(Position position, Player player) {
-        return isStartPosition(position.getRow(), player) && gameState.isNotBusy(position.up())
-                && gameState.isNotBusy(position.up().up());
+        return isStartPosition(position.getRow(), player) && gameState.isNotBusy(step(position, player))
+                && gameState.isNotBusy(step(step(position, player), player));
     }
 
     private boolean isStartPosition(int row, Player player) {
@@ -66,14 +72,14 @@ public class PawnMoveFinder implements MoveFinder {
         return row == BLACK_START_ROW;
     }
 
-    public Collection<Position> getNextHeatPositions(Position position, Player player) {
+    public List<Position> getNextHeatPositions(Position position, Player player) {
         List heatPositions = new ArrayList();
         if (Player.White.equals(player)) {
-            heatPositions.add(position.upAndLeft());
-            heatPositions.add(position.upAndRight());
+            heatPositions.add(PositionUtils.upAndLeft(position));
+            heatPositions.add(PositionUtils.upAndRight(position));
         } else {
-            heatPositions.add(position.downAndLeft());
-            heatPositions.add(position.downAndRight());
+            heatPositions.add(PositionUtils.downAndLeft(position));
+            heatPositions.add(PositionUtils.downAndRight(position));
         }
         return heatPositions;
     }
