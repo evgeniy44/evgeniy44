@@ -9,6 +9,7 @@ import java.io.*;
  */
 public class CLI {
     private static final String NEWLINE = System.getProperty("line.separator");
+    public static final String POSITION_REGEX = "[a-h][1-8]";
 
     private final BufferedReader inReader;
     private final PrintStream outStream;
@@ -25,7 +26,7 @@ public class CLI {
      * Write the string to the output
      * @param str The string to write
      */
-    private void writeOutput(String str) {
+    void writeOutput(String str) {
         this.outStream.println(str);
     }
 
@@ -48,6 +49,14 @@ public class CLI {
 
         while (true) {
             showBoard();
+            if (gameState.isCheckMate()) {
+                writeOutput("The game is over.  Congrats to " + gameState.getCurrentPlayer().opposite());
+                break;
+            }
+            if (gameState.isStaleMate()) {
+                writeOutput("The game is over.  Stalemate");
+                break;
+            }
             writeOutput(gameState.getCurrentPlayer() + "'s Move");
 
             String input = getInput();
@@ -65,10 +74,9 @@ public class CLI {
                     writeOutput("Current Game:");
                 } else if (input.equals("list")) {
                     writeOutput("See list of available move below:");
-                    gameState.getAvailableMoves().forEach(outStream::println);
-
+                    gameState.getAvailableMoves().forEach((move) -> this.writeOutput(move.toString()));
                 } else if (input.startsWith("move")) {
-                    writeOutput("====> Move Is Not Implemented (yet) <====");
+                    handleMoveCommand(input);
                 } else if (input.equals("hint")) {
                     writeOutput("Лошадью ходи, век воли не видать!");
                 } else {
@@ -76,6 +84,29 @@ public class CLI {
                 }
             }
         }
+    }
+
+    private void handleMoveCommand(String input) {
+        try {
+            if (isValidForMove(input)) {
+                gameState.move(input.split(" ")[1], input.split(" ")[2]);
+            } else {
+                writeOutput("Invalid format of 'move' command");
+            }
+        } catch (IllegalArgumentException e) {
+            writeOutput("Can't proceed with given move due to: " + e.getMessage());
+        }
+    }
+
+    private boolean isValidForMove(String input) {
+        String[] parts = input.split(" ");
+        if (parts.length != 3) {
+            return false;
+        }
+        if (!"move".equals(parts[0]) || !parts[1].matches(POSITION_REGEX) || !parts[2].matches(POSITION_REGEX)) {
+            return false;
+        }
+        return true;
     }
 
     private void doNewGame() {
@@ -121,7 +152,7 @@ public class CLI {
         builder.append(rowLabel);
 
         for (char c = Position.MIN_COLUMN; c <= Position.MAX_COLUMN; c++) {
-            Piece piece = gameState.getPieceAt(String.valueOf(c) + rowLabel);
+            Piece piece = gameState.getBoard().getPieceAt(String.valueOf(c) + rowLabel);
             char pieceChar = piece == null ? ' ' : piece.getIdentifier();
             builder.append(" | ").append(pieceChar);
         }

@@ -1,31 +1,36 @@
 package chess.move;
 
-import chess.GameState;
-import chess.Player;
-import chess.Position;
-import chess.PositionUtils;
+import chess.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class KnightMoveFinder implements MoveFinder {
-    private GameState gameState;
+    private Board board;
 
-    public KnightMoveFinder(GameState gameState) {
-        this.gameState = gameState;
+    public KnightMoveFinder(Board board) {
+        this.board = board;
     }
 
     @Override
     public List<Position> findPositionsToMove(Player player, Position position) {
         ArrayList<Position> positions = new ArrayList<>();
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::up, PositionUtils::up, PositionUtils::right));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::up, PositionUtils::up, PositionUtils::left));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::up, PositionUtils::left, PositionUtils::left));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::down, PositionUtils::left, PositionUtils::left));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::down, PositionUtils::down, PositionUtils::left));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::down, PositionUtils::down, PositionUtils::right));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::down, PositionUtils::right, PositionUtils::right));
-        addIfApplicable(positions, PositionUtils.move(position, PositionUtils::up, PositionUtils::right, PositionUtils::right));
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::up, PositionUtils::up, PositionUtils::right), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::up, PositionUtils::up, PositionUtils::left), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::up, PositionUtils::left, PositionUtils::left), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::down, PositionUtils::left, PositionUtils::left), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::down, PositionUtils::down, PositionUtils::left), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::down, PositionUtils::down, PositionUtils::right), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::down, PositionUtils::right, PositionUtils::right), player);
+        addIfApplicable(positions,
+                PositionUtils.move(position, PositionUtils::up, PositionUtils::right, PositionUtils::right), player);
         return positions;
     }
 
@@ -34,13 +39,13 @@ public class KnightMoveFinder implements MoveFinder {
         return findPositionsToMove(player, position);
     }
 
-    private void addIfApplicable(List<Position> positions, Position positionToAdd) {
-        if (positionToAdd!= null && canStepOn(positionToAdd)) {
+    private void addIfApplicable(List<Position> positions, Position positionToAdd, Player player) {
+        if (positionToAdd!= null && canStepOn(positionToAdd, player)) {
             positions.add(positionToAdd);
         }
     }
 
-    private boolean canStepOn(Position positionToAdd) {
-        return gameState.isNotBusy(positionToAdd) || gameState.containsOppositePiece(positionToAdd);
+    private boolean canStepOn(Position positionToAdd, Player player) {
+        return board.isNotOccupied(positionToAdd) || board.containsOppositePiece(positionToAdd, player);
     }
 }

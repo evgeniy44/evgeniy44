@@ -1,6 +1,6 @@
 package chess.move;
 
-import chess.GameState;
+import chess.Board;
 import chess.Player;
 import chess.Position;
 import org.junit.Test;
@@ -19,15 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Mock
-    private GameState gameState;
+    private Board board;
 
     @InjectMocks
-    private PawnMoveFinder pawnMoveFinder = new PawnMoveFinder(gameState);
+    private PawnMoveFinder pawnMoveFinder = new PawnMoveFinder(board);
 
     @Test
     public void shouldReturnStepAndJumpMoves() {
-        notOppositePositions(gameState, "d3", "f3");
-        notBusyPositions(gameState, "e3", "e4");
+        notOppositePositions(board, Player.White, "d3", "f3");
+        notBusyPositions(board, "e3", "e4");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
         assertContainsOnlyPositions(movePositions, "e4", "e3");
@@ -35,19 +35,28 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnOnlyStep() {
-        notOppositePositions(gameState, "d3", "f3");
-        notBusyPositions(gameState, "e3");
-        busyPositions(gameState, "e4");
+        notOppositePositions(board, Player.White, "d3", "f3");
+        notBusyPositions(board, "e3");
+        busyPositions(board, "e4");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
         assertContainsOnlyPositions(movePositions, "e3");
     }
 
     @Test
+    public void shouldReturnOnlyStepFromNotStartPosition() {
+        notOppositePositions(board, Player.White, "d4", "f4");
+        notBusyPositions(board, "e4");
+
+        List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e3"));
+        assertContainsOnlyPositions(movePositions, "e4");
+    }
+
+    @Test
     public void shouldReturnNoPositionsToMove() {
-        notOppositePositions(gameState, "d3", "f3");
-        notBusyPositions(gameState, "e4");
-        busyPositions(gameState, "e3");
+        notOppositePositions(board, Player.White, "d3", "f3");
+        notBusyPositions(board, "e4");
+        busyPositions(board, "e3");
 
         Collection<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
         assertThat(movePositions).isEmpty();
@@ -55,10 +64,10 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnPositionToHeatLeft() {
-        notOppositePositions(gameState, "f3");
-        oppositePositions(gameState, "d3");
-        notBusyPositions(gameState, "e4");
-        busyPositions(gameState, "e3");
+        notOppositePositions(board, Player.White, "f3");
+        oppositePositions(board, Player.White,"d3");
+        notBusyPositions(board, "e4");
+        busyPositions(board, "e3");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
         assertContainsOnlyPositions(movePositions, "d3");
@@ -66,10 +75,10 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnPositionToHeatRight() {
-        notOppositePositions(gameState, "d3");
-        oppositePositions(gameState, "f3");
-        notBusyPositions(gameState, "e4");
-        busyPositions(gameState, "e3");
+        notOppositePositions(board, Player.White, "d3");
+        oppositePositions(board, Player.White,"f3");
+        notBusyPositions(board, "e4");
+        busyPositions(board, "e3");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
         assertContainsOnlyPositions(movePositions, "f3");
@@ -77,8 +86,8 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllPossiblePositions() {
-        oppositePositions(gameState, "f3", "d3");
-        notBusyPositions(gameState, "e4", "e3");
+        oppositePositions(board, Player.White, "f3", "d3");
+        notBusyPositions(board, "e4", "e3");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.White, new Position("e2"));
         assertContainsOnlyPositions(movePositions, "f3", "e3", "d3", "e4");
@@ -86,8 +95,8 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllPosiblePositionsForBlackPlayer() {
-        oppositePositions(gameState, "d6", "f6");
-        notBusyPositions(gameState, "e5", "e6");
+        oppositePositions(board, Player.Black, "d6", "f6");
+        notBusyPositions(board, "e5", "e6");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.Black, new Position("e7"));
         assertContainsOnlyPositions(movePositions, "f6", "e6", "d6", "e5");
@@ -95,8 +104,8 @@ public class PawnMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shouldReturnAllHeatPositionsForBlackPlayer() {
-        notOppositePositions(gameState, "d6", "f6");
-        notBusyPositions(gameState, "e5", "e6");
+        notOppositePositions(board, Player.White, "d6", "f6");
+        notBusyPositions(board, "e5", "e6");
 
         List<Position> movePositions = pawnMoveFinder.findPositionsToMove(Player.Black, new Position("e7"));
         assertContainsOnlyPositions(movePositions, "e6", "e5");

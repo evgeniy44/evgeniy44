@@ -1,9 +1,8 @@
 package chess.move;
 
-import chess.GameState;
+import chess.Board;
 import chess.Player;
 import chess.Position;
-import chess.PositionUtils;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -13,23 +12,23 @@ import static chess.PositionUtils.*;
 
 public class KingMoveFinder implements MoveFinder {
 
-    private final GameState gameState;
+    private final Board board;
 
-    public KingMoveFinder(GameState gameState) {
-        this.gameState = gameState;
+    public KingMoveFinder(Board board) {
+        this.board = board;
     }
 
     @Override
     public List<Position> findPositionsToMove(Player player, Position position) {
         ArrayList<Position> positions = new ArrayList<>();
-        addIfApplicableToMove(positions, up(position));
-        addIfApplicableToMove(positions, upAndRight(position));
-        addIfApplicableToMove(positions, right(position));
-        addIfApplicableToMove(positions, downAndRight(position));
-        addIfApplicableToMove(positions, down(position));
-        addIfApplicableToMove(positions, downAndLeft(position));
-        addIfApplicableToMove(positions, left(position));
-        addIfApplicableToMove(positions, upAndLeft(position));
+        addIfApplicableToMove(positions, up(position), player);
+        addIfApplicableToMove(positions, upAndRight(position), player);
+        addIfApplicableToMove(positions, right(position), player);
+        addIfApplicableToMove(positions, downAndRight(position), player);
+        addIfApplicableToMove(positions, down(position), player);
+        addIfApplicableToMove(positions, downAndLeft(position), player);
+        addIfApplicableToMove(positions, left(position), player);
+        addIfApplicableToMove(positions, upAndLeft(position), player);
         return positions;
     }
 
@@ -39,8 +38,9 @@ public class KingMoveFinder implements MoveFinder {
                 down(position), downAndLeft(position), left(position), upAndLeft(position));
     }
 
-    private void addIfApplicableToMove(ArrayList<Position> positions, Position position) {
-        if (!gameState.containsMyPiece(position) && gameState.isNotProtected(position)) {
+    private void addIfApplicableToMove(ArrayList<Position> positions, Position position, Player player) {
+        if (position != null
+                && !board.containsMyPiece(position, player)) {
             positions.add(position);
         }
     }

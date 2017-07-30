@@ -1,6 +1,6 @@
 package chess.move;
 
-import chess.GameState;
+import chess.Board;
 import chess.Player;
 import chess.Position;
 import org.junit.Test;
@@ -15,15 +15,14 @@ import java.util.List;
 public class KingMoveFinderTest extends BaseMoveFinderTest {
 
     @Mock
-    private GameState gameState;
+    private Board board;
 
     @InjectMocks
-    private KingMoveFinder moveFinder = new KingMoveFinder(gameState);
+    private KingMoveFinder moveFinder = new KingMoveFinder(board);
 
     @Test
     public void shouldReturnAllPositionsToMove() {
-        notMyPositions(gameState, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
-        notProtected(gameState, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
+        notMyPositions(board, Player.White, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
 
         List<Position> positions = moveFinder.findPositionsToMove(Player.White, new Position("e4"));
         assertContainsOnlyPositions(positions, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
@@ -33,26 +32,5 @@ public class KingMoveFinderTest extends BaseMoveFinderTest {
     public void shouldReturnAllPositionsToMovProtect() {
         List<Position> positions = moveFinder.findPositionsToProtect(Player.White, new Position("e4"));
         assertContainsOnlyPositions(positions, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
-    }
-
-    @Test
-    public void shouldReturnAllPositionsExceptProtectedFields() {
-        notMyPositions(gameState, "d3", "d4", "d5", "e5", "f5", "f4", "f3", "e3");
-        notProtected(gameState, "d3", "d4", "d5", "e5", "f5", "f4");
-        isProtected(gameState, "f3", "e3");
-
-        List<Position> positions = moveFinder.findPositionsToMove(Player.White, new Position("e4"));
-        assertContainsOnlyPositions(positions, "d3", "d4", "d5", "e5", "f5", "f4");
-    }
-
-    @Test
-    public void shouldReturnAllPositionsExceptProtectedFieldsAndMyPieces() {
-        notMyPositions(gameState, "d5", "e5", "f5", "f4", "f3", "e3");
-        myPositions(gameState, "d3", "d4");
-        notProtected(gameState, "d3", "d4", "d5", "e5", "f5", "f4");
-        isProtected(gameState, "f3", "e3");
-
-        List<Position> positions = moveFinder.findPositionsToMove(Player.White, new Position("e4"));
-        assertContainsOnlyPositions(positions, "d5", "e5", "f5", "f4");
     }
 }

@@ -1,6 +1,6 @@
 package chess.move;
 
-import chess.GameState;
+import chess.Board;
 import chess.Player;
 import chess.Position;
 
@@ -10,11 +10,11 @@ import java.util.function.Function;
 
 public class StraightLinePieceMoveFinder implements MoveFinder {
 
-    private GameState gameState;
+    private Board board;
     private List<Function<Position, Position>> directionFunctions;
 
-    public StraightLinePieceMoveFinder(GameState gameState, List<Function<Position, Position>> directionFunctions) {
-        this.gameState = gameState;
+    public StraightLinePieceMoveFinder(Board board, List<Function<Position, Position>> directionFunctions) {
+        this.board = board;
         this.directionFunctions = directionFunctions;
     }
 
@@ -22,7 +22,7 @@ public class StraightLinePieceMoveFinder implements MoveFinder {
     public List<Position> findPositionsToMove(Player player, Position position) {
         ArrayList<Position> positions = new ArrayList<>();
         for (Function<Position, Position> directionFunction : directionFunctions) {
-            positions.addAll(fromDirection(position, directionFunction, false));
+            positions.addAll(fromDirection(position, directionFunction, player, false));
         }
         return positions;
     }
@@ -31,29 +31,29 @@ public class StraightLinePieceMoveFinder implements MoveFinder {
     public List<Position> findPositionsToProtect(Player player, Position position) {
         ArrayList<Position> positions = new ArrayList<>();
         for (Function<Position, Position> directionFunction : directionFunctions) {
-            positions.addAll(fromDirection(position, directionFunction, true));
+            positions.addAll(fromDirection(position, directionFunction, player, true));
         }
         return positions;
     }
 
     private List<Position> fromDirection(Position position, Function<Position, Position> directionFunction,
-                                         boolean includeMyPiece) {
+                                         Player player, boolean includeMyPiece) {
         List<Position> positions = new ArrayList<>();
         Position destination = directionFunction.apply(position);
         if (destination == null) {
             return positions;
         }
-        if (positionShouldBeAdded(destination, includeMyPiece)) {
+        if (positionShouldBeAdded(destination, player, includeMyPiece)) {
             positions.add(destination);
         }
-        if (!gameState.isNotBusy(destination)) {
+        if (!board.isNotOccupied(destination)) {
             return positions;
         }
-        positions.addAll(fromDirection(destination, directionFunction, includeMyPiece));
+        positions.addAll(fromDirection(destination, directionFunction, player, includeMyPiece));
         return positions;
     }
 
-    private boolean positionShouldBeAdded(Position position, boolean includeMyPiece) {
-        return includeMyPiece || (!gameState.containsMyPiece(position));
+    private boolean positionShouldBeAdded(Position position, Player player, boolean includeMyPiece) {
+        return includeMyPiece || (!board.containsMyPiece(position, player));
     }
 }

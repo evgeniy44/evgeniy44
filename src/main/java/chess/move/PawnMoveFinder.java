@@ -1,12 +1,8 @@
 package chess.move;
 
-import chess.GameState;
-import chess.Player;
-import chess.Position;
-import chess.PositionUtils;
+import chess.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,10 +11,10 @@ import static chess.GameState.WHITE_START_ROW;
 
 public class PawnMoveFinder implements MoveFinder {
 
-    private final GameState gameState;
+    private final Board board;
 
-    public PawnMoveFinder(GameState gameState) {
-        this.gameState = gameState;
+    public PawnMoveFinder(Board board) {
+        this.board = board;
     }
 
     public List<Position> findPositionsToMove(Player player, Position position) {
@@ -34,7 +30,8 @@ public class PawnMoveFinder implements MoveFinder {
     }
 
     private List<Position> getPositionsToHeat(Player player, Position position) {
-        return getNextHeatPositions(position, player).stream().filter(gameState::containsOppositePiece)
+        return getNextHeatPositions(position, player).stream()
+                .filter(destination -> board.containsOppositePiece(destination, player))
                 .collect(Collectors.toList());
     }
 
@@ -44,13 +41,13 @@ public class PawnMoveFinder implements MoveFinder {
             positions.add(step(position, player));
             positions.add(step(step(position, player), player));
         } else if (canStep(position, player)) {
-            positions.add(PositionUtils.up(position));
+            positions.add(step(position, player));
         }
         return positions;
     }
 
     private boolean canStep(Position position, Player player) {
-        return isStartPosition(position.getRow(), player) && gameState.isNotBusy(PositionUtils.up(position));
+        return board.isNotOccupied(step(position, player));
     }
 
     private Position step(Position position, Player player) {
@@ -61,8 +58,8 @@ public class PawnMoveFinder implements MoveFinder {
     }
 
     private boolean canJump(Position position, Player player) {
-        return isStartPosition(position.getRow(), player) && gameState.isNotBusy(step(position, player))
-                && gameState.isNotBusy(step(step(position, player), player));
+        return isStartPosition(position.getRow(), player) && board.isNotOccupied(step(position, player))
+                && board.isNotOccupied(step(step(position, player), player));
     }
 
     private boolean isStartPosition(int row, Player player) {

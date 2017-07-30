@@ -1,6 +1,7 @@
 package chess.move;
 
-import chess.GameState;
+import chess.Board;
+import chess.Player;
 import chess.Position;
 
 import java.util.Arrays;
@@ -12,52 +13,39 @@ import static org.mockito.Mockito.when;
 
 public abstract class BaseMoveFinderTest {
 
-    protected void notBusyPositions(GameState gameState, String... positions) {
+    protected void notBusyPositions(Board board, String... positions) {
         for (String position : positions) {
-            when(gameState.isNotBusy(new Position(position))).thenReturn(true);
+            when(board.isNotOccupied(new Position(position))).thenReturn(true);
         }
     }
 
-    protected void busyPositions(GameState gameState, String... positions) {
+    protected void busyPositions(Board board, String... positions) {
         for (String position : positions) {
-            when(gameState.isNotBusy(new Position(position))).thenReturn(false);
+            when(board.isNotOccupied(new Position(position))).thenReturn(false);
         }
     }
 
-    protected void oppositePositions(GameState gameState, String... positions) {
+    protected void oppositePositions(Board board, Player player, String... positions) {
         for (String position : positions) {
-            when(gameState.containsOppositePiece(new Position(position))).thenReturn(true);
+            when(board.containsOppositePiece(new Position(position), player)).thenReturn(true);
         }
     }
 
-    protected void myPositions(GameState gameState, String... positions) {
+    protected void myPositions(Board board, Player player, String... positions) {
         for (String position : positions) {
-            when(gameState.containsMyPiece(new Position(position))).thenReturn(true);
+            when(board.containsMyPiece(new Position(position), player)).thenReturn(true);
         }
     }
 
-    protected void notMyPositions(GameState gameState, String... positions) {
+    protected void notMyPositions(Board board, Player player, String... positions) {
         for (String position : positions) {
-            when(gameState.containsMyPiece(new Position(position))).thenReturn(false);
+            when(board.containsMyPiece(new Position(position), player)).thenReturn(false);
         }
     }
 
-    protected void notProtected(GameState gameState, String... positions) {
+    protected void notOppositePositions(Board board, Player player, String... positions) {
         for (String position : positions) {
-            when(gameState.isNotProtected(new Position(position))).thenReturn(true);
-        }
-    }
-
-    protected void isProtected(GameState gameState, String... positions) {
-        for (String position : positions) {
-            when(gameState.isNotProtected(new Position(position))).thenReturn(false);
-        }
-    }
-
-
-    protected void notOppositePositions(GameState gameState, String... positions) {
-        for (String position : positions) {
-            when(gameState.containsOppositePiece(new Position(position))).thenReturn(false);
+            when(board.containsOppositePiece(new Position(position), player)).thenReturn(false);
         }
     }
 

@@ -1,9 +1,6 @@
 package chess.move;
 
-import chess.GameState;
-import chess.Player;
-import chess.Position;
-import chess.PositionUtils;
+import chess.*;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,11 +16,11 @@ import static org.mockito.Mockito.when;
 public class RookMoveFinderTest {
 
     @Mock
-    private GameState gameState;
+    private Board board;
 
     @Test
     public void shoudReturnAllPositionsByEndOfBoard() {
-        MoveFinder moveFinder = new StraightLinePieceMoveFinder(gameState, Lists.newArrayList(
+        MoveFinder moveFinder = new StraightLinePieceMoveFinder(board, Lists.newArrayList(
                 PositionUtils::up, PositionUtils::left,
                 PositionUtils::down, PositionUtils::right));
 
@@ -40,11 +37,9 @@ public class RookMoveFinderTest {
                 new Position("g1"), new Position("h1"));
     }
 
-
-
     private void isNotBusyTrueForPositions(String... positions) {
         for (String position : positions) {
-            when(gameState.isNotBusy(new Position(position))).thenReturn(true);
+            when(board.isNotOccupied(new Position(position))).thenReturn(true);
         }
     }
 }

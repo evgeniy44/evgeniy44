@@ -51,6 +51,66 @@ public class CLITest {
         assertEquals("Should have 13 output calls", 13, output.size());
     }
 
+    /**
+     * Test that the CLI can initially accept input
+     */
+    @Test
+    public void testListCommand() throws Exception {
+        runCliWithInput("list");
+
+        List<String> output = captureOutput();
+        assertEquals("Should have 27 output calls", 27, output.size());
+    }
+
+    /**
+     * Test that the CLI can initially accept input
+     */
+    @Test
+    public void testMoveWithoutDestinationPosition() throws Exception {
+        runCliWithInput("move e2");
+
+        List<String> output = captureOutput();
+        assertEquals("Should have an appropriate message when move command is invalid",
+                "Invalid format of 'move' command", output.get(4));
+    }
+
+    /**
+     * Test that the CLI can initially accept move
+     */
+    @Test
+    public void testMoveWithIncorrectPosition() throws Exception {
+        runCliWithInput("move e2 e9");
+
+        List<String> output = captureOutput();
+        assertEquals("Should have an appropriate message when move command is invalid",
+                "Invalid format of 'move' command", output.get(4));
+    }
+
+    /**
+     * Test that the CLI can initially accept move
+     */
+    @Test
+    public void testMoveWithCorrectPosition() throws Exception {
+        runCliWithInput("move e2 e4");
+
+        List<String> output = captureOutput();
+        assertNotSame("Should have an appropriate message when move command is invalid",
+                "Invalid format of 'move' command", output.get(4));
+    }
+
+    /**
+     * Test that the CLI can initially accept hint :)
+     */
+    @Test
+    public void testHint() throws Exception {
+        runCliWithInput("hint");
+
+        List<String> output = captureOutput();
+        assertEquals("Should have an appropriate message when hint command is provided",
+                "Лошадью ходи, век воли не видать!", output.get(4));
+    }
+
+
     @Test
     public void testNewCommand() throws Exception {
         runCliWithInput("new");

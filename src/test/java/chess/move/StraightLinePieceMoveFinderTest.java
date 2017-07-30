@@ -1,9 +1,6 @@
 package chess.move;
 
-import chess.GameState;
-import chess.Player;
-import chess.Position;
-import chess.PositionUtils;
+import chess.*;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,16 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Mock
-    private GameState gameState;
+    private Board board;
 
     @InjectMocks
-    private StraightLinePieceMoveFinder moveFinder = new StraightLinePieceMoveFinder(gameState, Lists.newArrayList(
+    private StraightLinePieceMoveFinder moveFinder = new StraightLinePieceMoveFinder(board, Lists.newArrayList(
             PositionUtils::upAndRight, PositionUtils::upAndLeft,
             PositionUtils::downAndRight, PositionUtils::downAndLeft));
 
     @Test
     public void shouldReturnAllPositionsByEndOfBoard() {
-        notBusyPositions(gameState, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
+        notBusyPositions(board, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
 
         List<Position> moves = moveFinder.findPositionsToMove(Player.White, new Position("b1"));
         assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
@@ -36,7 +33,7 @@ public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shoudReturnAllPositionsByEndOfBoardUnderProtection() {
-        notBusyPositions(gameState, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
+        notBusyPositions(board, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
 
         List<Position> moves = moveFinder.findPositionsToProtect(Player.White, new Position("b1"));
         assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5", "g6", "h7");
@@ -44,9 +41,9 @@ public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shoudReturnAllPositionsWithoutMyPiece() {
-        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
-        busyPositions(gameState, "f5");
-        myPositions(gameState, "f5");
+        notBusyPositions(board, "a2", "c2", "d3", "e4");
+        busyPositions(board, "f5");
+        myPositions(board, Player.White, "f5");
 
         List<Position> moves = moveFinder.findPositionsToMove(Player.White, new Position("b1"));
         assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4");
@@ -54,9 +51,9 @@ public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shoudReturnAllPositionsWithMyPieceUnderProtection() {
-        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
-        busyPositions(gameState, "f5");
-        myPositions(gameState, "f5");
+        notBusyPositions(board, "a2", "c2", "d3", "e4");
+        busyPositions(board, "f5");
+        myPositions(board, Player.White, "f5");
 
         List<Position> moves = moveFinder.findPositionsToProtect(Player.White, new Position("b1"));
         assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5");
@@ -64,9 +61,9 @@ public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shoudReturnAllPositionsWithOppositePiece() {
-        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
-        busyPositions(gameState, "f5");
-        notMyPositions(gameState, "f5");
+        notBusyPositions(board, "a2", "c2", "d3", "e4");
+        busyPositions(board, "f5");
+        notMyPositions(board, Player.White, "f5");
 
         List<Position> moves = moveFinder.findPositionsToMove(Player.White, new Position("b1"));
         assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5");
@@ -74,9 +71,9 @@ public class StraightLinePieceMoveFinderTest extends BaseMoveFinderTest {
 
     @Test
     public void shoudReturnAllPositionsWithOppositePieceUnderProtection() {
-        notBusyPositions(gameState, "a2", "c2", "d3", "e4");
-        busyPositions(gameState, "f5");
-        notMyPositions(gameState, "f5");
+        notBusyPositions(board, "a2", "c2", "d3", "e4");
+        busyPositions(board, "f5");
+        notMyPositions(board, Player.White, "f5");
 
         List<Position> moves = moveFinder.findPositionsToProtect(Player.White, new Position("b1"));
         assertContainsOnlyPositions(moves, "a2", "c2", "d3", "e4", "f5");

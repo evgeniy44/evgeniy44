@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ColumnTest {
 
     @Test(expected = IllegalArgumentException.class)
-    public void leftShouldFailOnUnjknownSymbol() {
+    public void leftShouldFailOnUnknownSymbol() {
         Column.left('v');
     }
 
