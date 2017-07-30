@@ -60,6 +60,12 @@ public class GameStateTest {
         state.move("e3", "e5");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void moveToImpossiblePositionShouldFail() {
+        state.reset();
+        state.move("e2", "e5");
+    }
+
     @Test
     public void testAllowedStepsUnderCheck() {
         state.reset();
